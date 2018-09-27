@@ -1,1 +1,187 @@
-[{"id":"37ad019e.85d83e","type":"tab","label":"Flow 1","disabled":false,"info":""},{"id":"6901c003.b48bb","type":"tab","label":"Flow 2","disabled":false,"info":""},{"id":"7a38e1b4.ac4b7","type":"tab","label":"Flow 3","disabled":false,"info":""},{"id":"cb5f81f3.45184","type":"subflow","name":"Subflow 1","info":"","in":[{"x":60,"y":100,"wires":[{"id":"9b6a32f2.cf9cc"}]}],"out":[{"x":540,"y":120,"wires":[{"id":"9b6a32f2.cf9cc","port":0}]}]},{"id":"1a77e741.aaca09","type":"inject","z":"37ad019e.85d83e","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":100,"y":80,"wires":[["d4c7d6d4.a287d8"]]},{"id":"b544dc43.eb5b","type":"debug","z":"37ad019e.85d83e","name":"","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"false","x":430,"y":160,"wires":[]},{"id":"d4c7d6d4.a287d8","type":"function","z":"37ad019e.85d83e","name":"flow1","func":"var date = new Date(msg.payload);\n//\nmsg.payload = date.toString();\n//\nreturn msg;","outputs":1,"noerr":0,"x":280,"y":100,"wires":[["b544dc43.eb5b"]]},{"id":"611d95ce.0c660c","type":"inject","z":"6901c003.b48bb","name":"","topic":"","payload":"","payloadType":"str","repeat":"300","crontab":"","once":true,"onceDelay":0.1,"x":90,"y":60,"wires":[["3615bd93.133522"]]},{"id":"3615bd93.133522","type":"http request","z":"6901c003.b48bb","name":"Earthquake_info","method":"GET","ret":"obj","url":"https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2014-01-01&endtime=2014-01-02","tls":"","x":180,"y":140,"wires":[["6131e10b.4e3ab"]]},{"id":"5376cd5a.cb0c44","type":"inject","z":"7a38e1b4.ac4b7","name":"","topic":"","payload":"","payloadType":"str","repeat":"300","crontab":"","once":false,"onceDelay":"","x":90,"y":40,"wires":[["845a752.ffdf188"]]},{"id":"845a752.ffdf188","type":"http request","z":"7a38e1b4.ac4b7","name":"Recent Quakes","method":"GET","url":"https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.csv","tls":"","x":260,"y":40,"wires":[["60067347.275fec"]]},{"id":"60067347.275fec","type":"csv","z":"7a38e1b4.ac4b7","name":"","sep":",","hdrin":true,"hdrout":"","multi":"one","ret":"\\n","temp":"","skip":0,"x":430,"y":40,"wires":[["7cf70737.60db38","b85f0640.8127e8"]]},{"id":"7cf70737.60db38","type":"debug","z":"7a38e1b4.ac4b7","name":"","active":true,"complete":false,"x":590,"y":40,"wires":[]},{"id":"b85f0640.8127e8","type":"switch","z":"7a38e1b4.ac4b7","name":"","property":"payload.mag","propertyType":"msg","rules":[{"t":"gte","v":"7","vt":"num"}],"checkall":"true","outputs":1,"x":470,"y":100,"wires":[["7fc55c83.eb9cc4"]]},{"id":"7fc55c83.eb9cc4","type":"change","z":"7a38e1b4.ac4b7","name":"","rules":[{"t":"set","p":"payload","pt":"msg","to":"PANIC!","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":610,"y":160,"wires":[["1dde995b.5c3817"]]},{"id":"1dde995b.5c3817","type":"debug","z":"7a38e1b4.ac4b7","name":"","active":true,"complete":false,"x":710,"y":100,"wires":[]},{"id":"9b6a32f2.cf9cc","type":"split","z":"cb5f81f3.45184","name":"","splt":"\\n","spltType":"str","arraySplt":1,"arraySpltType":"len","stream":false,"addname":"","x":250,"y":120,"wires":[["a8d7396f.22a2a8"]]},{"id":"379a8d8.b5e4772","type":"debug","z":"cb5f81f3.45184","name":"switch1","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"payload.properties.mag","x":420,"y":480,"wires":[]},{"id":"a8d7396f.22a2a8","type":"switch","z":"cb5f81f3.45184","name":"","property":"payload.properties.mag","propertyType":"msg","rules":[{"t":"gte","v":"4","vt":"str"}],"checkall":"false","repair":false,"outputs":1,"x":230,"y":440,"wires":[["379a8d8.b5e4772"]]},{"id":"96d8a2b1.b31fd","type":"debug","z":"6901c003.b48bb","name":"split1","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"payload","x":690,"y":400,"wires":[]},{"id":"6131e10b.4e3ab","type":"change","z":"6901c003.b48bb","name":"","rules":[{"t":"set","p":"payload","pt":"msg","to":"payload.features","tot":"msg"}],"action":"","property":"","from":"","to":"","reg":false,"x":300,"y":260,"wires":[["7faa3e20.31494"]]},{"id":"7faa3e20.31494","type":"subflow:cb5f81f3.45184","z":"6901c003.b48bb","name":"","x":520,"y":280,"wires":[["96d8a2b1.b31fd"]]}]
+[
+    {
+        "id": "6901c003.b48bb",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "cb5f81f3.45184",
+        "type": "subflow",
+        "name": "Subflow 1",
+        "info": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "9b6a32f2.cf9cc"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 540,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "9b6a32f2.cf9cc",
+                        "port": 0
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "611d95ce.0c660c",
+        "type": "inject",
+        "z": "6901c003.b48bb",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "300",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 90,
+        "y": 60,
+        "wires": [
+            [
+                "3615bd93.133522"
+            ]
+        ]
+    },
+    {
+        "id": "3615bd93.133522",
+        "type": "http request",
+        "z": "6901c003.b48bb",
+        "name": "Earthquake_info",
+        "method": "GET",
+        "ret": "obj",
+        "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2014-01-01&endtime=2014-01-02",
+        "tls": "",
+        "x": 180,
+        "y": 140,
+        "wires": [
+            [
+                "6131e10b.4e3ab"
+            ]
+        ]
+    },
+    {
+        "id": "9b6a32f2.cf9cc",
+        "type": "split",
+        "z": "cb5f81f3.45184",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 250,
+        "y": 120,
+        "wires": [
+            [
+                "a8d7396f.22a2a8"
+            ]
+        ]
+    },
+    {
+        "id": "379a8d8.b5e4772",
+        "type": "debug",
+        "z": "cb5f81f3.45184",
+        "name": "switch1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.properties.mag",
+        "x": 420,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "a8d7396f.22a2a8",
+        "type": "switch",
+        "z": "cb5f81f3.45184",
+        "name": "",
+        "property": "payload.properties.mag",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gte",
+                "v": "4",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 1,
+        "x": 230,
+        "y": 440,
+        "wires": [
+            [
+                "379a8d8.b5e4772"
+            ]
+        ]
+    },
+    {
+        "id": "96d8a2b1.b31fd",
+        "type": "debug",
+        "z": "6901c003.b48bb",
+        "name": "split1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 690,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "6131e10b.4e3ab",
+        "type": "change",
+        "z": "6901c003.b48bb",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.features",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 300,
+        "y": 260,
+        "wires": [
+            [
+                "7faa3e20.31494"
+            ]
+        ]
+    },
+    {
+        "id": "7faa3e20.31494",
+        "type": "subflow:cb5f81f3.45184",
+        "z": "6901c003.b48bb",
+        "name": "",
+        "x": 520,
+        "y": 280,
+        "wires": [
+            [
+                "96d8a2b1.b31fd"
+            ]
+        ]
+    }
+]
